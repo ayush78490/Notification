@@ -25,8 +25,8 @@ const Collection = () => {
     setAllCollections(parsedData.Collections);
     let temparr = parsedData.Collections.slice(0, 8);
     setLatestCollections(temparr);
-    console.log("this is parsedData.Collections", parsedData.Collections);
-    console.log("Hardcoded DB Connections");
+    // console.log("this is parsedData.Collections", parsedData.Collections);
+    // console.log("Hardcoded DB Connections");
   }, []);
 
   const handleImageClick = async (card, index) => {
