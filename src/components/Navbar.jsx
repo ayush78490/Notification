@@ -35,25 +35,12 @@ const Navbar = () => {
   const walletClickHandler = async () => {
     if (!walletDetails) {
       try {
-        if (!window.arweaveWallet) {
-          throw new Error("ArConnect Wallet is not installed or enabled.");
-        }
-
         const arweave = Arweave.init({});
         const wallet = await window.arweaveWallet.getActiveAddress();
-        
-        // Check if the wallet is already logged in
-        if (wallet) {
-          const balanceInWinston = await arweave.wallets.getBalance(wallet);
-          const balanceInAr = arweave.ar.winstonToAr(balanceInWinston);
-
-          // Set wallet details as the logged-in user info
-          setWalletDetails({ address: wallet, balance: balanceInAr });
-          localStorage.setItem("walletAddress", wallet); // Save wallet address to localStorage
-          alert("Wallet connected and logged in successfully!");
-        } else {
-          alert("Failed to retrieve wallet address.");
-        }
+        const balanceInWinston = await arweave.wallets.getBalance(wallet);
+        const balanceInAr = arweave.ar.winstonToAr(balanceInWinston);
+        setWalletDetails({ address: wallet, balance: balanceInAr });
+        alert("Wallet connected successfully!");
       } catch (error) {
         alert("Failed to connect wallet: " + error.message);
       }
