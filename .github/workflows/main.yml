@@ -1,34 +1,29 @@
-name: Protocol Land Sync
+name: Arweave Sync
+
 on:
-    # Run with every push to 'main' branch:
-    push:
-        branches:
-            - 'main'
-    # Run Manually:
-    #workflow_dispatch:
+  push:
+    branches:
+      - main
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: 'Checkout repo (default branch)'
-              uses: actions/checkout@v3
-              with:
-                  # fetch all history for all branches:
-                  fetch-depth: 0
-            - name: 'Checkout all branches'
-              run: |
-                  default_branch=$(git branch | grep '*' | sed 's/\* //')
-                  for abranch in $(git branch -a | grep -v HEAD | grep remotes | sed "s/remotes\/origin\///g"); do git checkout $abranch ; done
-                  git checkout $default_branch
-                  git branch -a
-            - name: 'Setup node 18'
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 18.x
-            - name: 'Sync repo to Protocol Land'
-              run: npx @protocol.land/sync
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  REPO_TITLE: ${{ github.event.repository.name }}
-                  REPO_DESCRIPTION: ${{ github.event.repository.description }}
-                  WALLET: ${{ secrets.WALLET }}
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install and Run Protocol Sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_TITLE: Notification
+          REPO_DESCRIPTION: ''
+          WALLET: ${{ secrets.ARWEAVE_WALLET }}
+        run: |
+          echo "$WALLET" > arweave-wallet-key.json
+          npx @protocol.land/sync --wallet arweave-wallet-key.json
